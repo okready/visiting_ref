@@ -1,0 +1,35 @@
+language: rust
+sudo: false
+
+rust:
+# Explicitly test against minimum Rust version to avoid accidentally breaking
+# compatibility.
+- 1.39.0
+- stable
+- beta
+- nightly
+
+matrix:
+  include:
+  # `rustfmt` verification.
+  - rust: stable
+    before_script:
+    - rustup component add rustfmt
+    script:
+    - cargo fmt -- --check
+  # `clippy` lint tests.
+  - rust: stable
+    before_script:
+    - rustup component add clippy
+    script:
+    - cargo clippy -- -Dwarnings
+
+script:
+- cargo build
+- cargo build --release
+- cargo test --verbose
+- cargo test --verbose --release
+
+notifications:
+  email:
+    on_success: never

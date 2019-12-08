@@ -10,8 +10,8 @@ scope.
 [![Rustc Version 1.25+](https://img.shields.io/badge/rustc-1.39+-lightgray.svg)](https://blog.rust-lang.org/2019/11/07/Rust-1.39.0.html)
 [![Build Status](https://travis-ci.org/okready/visiting_ref.svg?branch=master)](https://travis-ci.org/okready/visiting_ref)
 
-- [Documentation](https://docs.rs/scratchpad)
-- [Release notes](https://github.com/okready/scratchpad/releases)
+- [Documentation](https://docs.rs/visiting_ref)
+- [Release notes](https://github.com/okready/visiting_ref/releases)
 
 This crate provides `VisitingRef` and `VisitingMut`, two container types that effectively
 allow for safe "borrowing" of values through temporary transference of ownership between two

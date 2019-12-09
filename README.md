@@ -1,7 +1,7 @@
 visiting_ref
 ============
 
-Containers that asynchronously returns ownership of a value to another context upon exiting
+Container types that asynchronously return ownership of a value to another context upon exiting
 scope.
 
 [![Latest Version](https://img.shields.io/crates/v/visiting_ref.svg)](https://crates.io/crates/visiting_ref)

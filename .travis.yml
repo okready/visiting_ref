@@ -1,5 +1,5 @@
 language: rust
-sudo: false
+os: linux
 
 rust:
 # Explicitly test against minimum Rust version to avoid accidentally breaking
@@ -9,7 +9,7 @@ rust:
 - beta
 - nightly
 
-matrix:
+jobs:
   include:
   # `rustfmt` verification.
   - rust: stable

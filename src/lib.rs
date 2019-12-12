@@ -212,34 +212,29 @@
 //!     }
 //! }
 //!
-//! fn main() -> Result<(), Box<dyn Error>> {
-//!     let mut rt = Runtime::new()?;
-//!     rt.block_on(async {
-//!         let pool = Pool::new(vec![1, 2]);
+//! #[tokio::main]
+//! async fn main() {
+//!     let pool = Pool::new(vec![1, 2]);
 //!
-//!         // Our `Pool::get` method always returns the item at the end of the pool first (in
-//!         // this case, it will be the `2` value we provided during initialization).
-//!         let mut x = pool.get().await;
-//!         assert_eq!(*x, 2);
-//!         let y = pool.get().await;
-//!         assert_eq!(*y, 1);
+//!     // Our `Pool::get` method always returns the item at the end of the pool first (in this
+//!     // case, it will be the `2` value we provided during initialization).
+//!     let mut x = pool.get().await;
+//!     assert_eq!(*x, 2);
+//!     let y = pool.get().await;
+//!     assert_eq!(*y, 1);
 //!
-//!         // We can modify an item, so the next call that retrieves the same item later will
-//!         // see the updated value.
-//!         *x = 5;
+//!     // We can modify an item, so the next call that retrieves the same item later will see
+//!     // the updated value.
+//!     *x = 5;
 //!
-//!         // Dropping the `VisitingMut` sets it up to be requeued.
-//!         drop(x);
+//!     // Dropping the `VisitingMut` sets it up to be requeued.
+//!     drop(x);
 //!
-//!         // Fetch the item we just released. Note that since the requeueing is asynchronous,
-//!         // the item isn't guaranteed to be back in the pool yet, but since the pool was
-//!         // empty, the following code will wait for the item to become available if
-//!         // necessary.
-//!         let a = pool.get().await;
-//!         assert_eq!(*a, 5);
-//!     });
-//!
-//!     Ok(())
+//!     // Fetch the item we just released. Note that since the requeueing is asynchronous, the
+//!     // item isn't guaranteed to be back in the pool yet, but since the pool was empty, the
+//!     // following code will wait for the item to become available if necessary.
+//!     let a = pool.get().await;
+//!     assert_eq!(*a, 5);
 //! }
 //! ```
 //!

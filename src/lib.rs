@@ -443,35 +443,6 @@ impl<T> VisitingRef<T> {
     }
 }
 
-impl<T> Deref for VisitingRef<T> {
-    type Target = T;
-
-    #[inline]
-    fn deref(&self) -> &T {
-        &*self.inner.value
-    }
-}
-
-impl<T> fmt::Debug for VisitingRef<T>
-where
-    T: fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("VisitingRef")
-            .field("value", &*self.inner.value)
-            .finish()
-    }
-}
-
-impl<T> fmt::Display for VisitingRef<T>
-where
-    T: fmt::Display,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.inner.value.fmt(f)
-    }
-}
-
 impl<T> From<VisitingMut<T>> for VisitingRef<T> {
     #[inline]
     fn from(value: VisitingMut<T>) -> Self {
@@ -550,15 +521,6 @@ impl<T> VisitingMut<T> {
     }
 }
 
-impl<T> Deref for VisitingMut<T> {
-    type Target = T;
-
-    #[inline]
-    fn deref(&self) -> &T {
-        &*self.inner.value
-    }
-}
-
 impl<T> DerefMut for VisitingMut<T> {
     #[inline]
     fn deref_mut(&mut self) -> &mut T {
@@ -566,25 +528,57 @@ impl<T> DerefMut for VisitingMut<T> {
     }
 }
 
-impl<T> fmt::Debug for VisitingMut<T>
-where
-    T: fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("VisitingMut")
-            .field("value", &*self.inner.value)
-            .finish()
+/// Implement a non-`Debug` string formatting trait for `VisitingRef` or `VisitingMut`.
+macro_rules! impl_fmt_trait {
+    ($ref_type:ident, $trait_name:ident) => {
+        impl<T> fmt::$trait_name for $ref_type<T>
+        where
+            T: fmt::$trait_name,
+        {
+            #[inline]
+            fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                self.inner.value.fmt(f)
+            }
+        }
     }
 }
 
-impl<T> fmt::Display for VisitingMut<T>
-where
-    T: fmt::Display,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.inner.value.fmt(f)
-    }
+/// Implement `Deref` and string formatting traits for `VisitingRef` or `VisitingMut`
+macro_rules! impl_common_traits {
+    ($ref_type:ident) => {
+        impl<T> Deref for $ref_type<T> {
+            type Target = T;
+
+            #[inline]
+            fn deref(&self) -> &T {
+                &*self.inner.value
+            }
+        }
+
+        impl<T> fmt::Debug for $ref_type<T>
+        where
+            T: fmt::Debug,
+        {
+            fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                f.debug_struct(stringify!($ref_type))
+                    .field("value", &*self.inner.value)
+                    .finish()
+            }
+        }
+
+        impl_fmt_trait!($ref_type, Display);
+        impl_fmt_trait!($ref_type, Binary);
+        impl_fmt_trait!($ref_type, LowerExp);
+        impl_fmt_trait!($ref_type, LowerHex);
+        impl_fmt_trait!($ref_type, Octal);
+        impl_fmt_trait!($ref_type, Pointer);
+        impl_fmt_trait!($ref_type, UpperExp);
+        impl_fmt_trait!($ref_type, UpperHex);
+    };
 }
+
+impl_common_traits!(VisitingRef);
+impl_common_traits!(VisitingMut);
 
 /// Future that resolves to the value wrapped by a [`VisitingRef`] or [`VisitingMut`] after the
 /// container is dropped.

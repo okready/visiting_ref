@@ -33,5 +33,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...HEAD]
+[Unreleased]: https://github.com/okready/visiting_ref/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/okready/visiting_ref/releases/tag/v0.1.0

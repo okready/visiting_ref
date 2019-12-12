@@ -458,7 +458,7 @@ where
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("VisitingRef")
-            .field("value", &self.inner.value)
+            .field("value", &*self.inner.value)
             .finish()
     }
 }
@@ -572,7 +572,7 @@ where
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("VisitingMut")
-            .field("value", &self.inner.value)
+            .field("value", &*self.inner.value)
             .finish()
     }
 }

@@ -543,7 +543,7 @@ macro_rules! impl_fmt_trait {
                 self.inner.value.fmt(f)
             }
         }
-    }
+    };
 }
 
 /// Implement `Deref` and string formatting traits for `VisitingRef` or `VisitingMut`

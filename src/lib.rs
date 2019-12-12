@@ -388,6 +388,9 @@
 
 extern crate alloc;
 
+#[cfg(test)]
+mod tests;
+
 use alloc::fmt;
 use core::{
     mem::ManuallyDrop,

@@ -385,6 +385,10 @@
 //! [`rental!`]: https://docs.rs/rental/0.5/rental/macro.rental.html
 
 #![no_std]
+// LINT: Ignore `needless_doctest_main` for doc tests that use `#[tokio::main]` (if there's a way to
+//       isolate this to just the relevant doc tests, then it would be nice to do that instead of
+//       disabling the lint for the entire crate).
+#![doc(test(attr(allow(clippy::needless_doctest_main))))]
 
 extern crate alloc;
 

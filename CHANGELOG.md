@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- `VisitingRef::run_with` and `VisitingMut::run_with` functions that wrap both creation of a
+  `VisitingRef` or `VisitingMut` and running an asynchronous closure with the `VisitingRef` or
+  `VisitingMut` as an argument.
 - [`Binary`](https://doc.rust-lang.org/stable/core/fmt/trait.Binary.html),
   [`LowerExp`](https://doc.rust-lang.org/stable/core/fmt/trait.LowerExp.html),
   [`LowerHex`](https://doc.rust-lang.org/stable/core/fmt/trait.LowerHex.html),

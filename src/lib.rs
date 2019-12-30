@@ -448,6 +448,38 @@ impl<T> VisitingRef<T> {
 
         (Self { inner }, Return { receiver })
     }
+
+    /// Wraps a given `T` value in a `VisitingRef` and runs an asynchronous closure with the
+    /// `VisitingRef<T>` as its argument.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use visiting_ref::VisitingRef;
+    ///
+    /// # futures::executor::block_on(async move {
+    /// struct Foo {
+    ///     value: i32,
+    /// }
+    ///
+    /// let foo = Foo { value: 27 };
+    ///
+    /// let (foo, result) = VisitingRef::run_with(foo, |foo| async move { foo.value * 3 }).await;
+    /// assert_eq!(result, 81);
+    /// assert_eq!(foo.value, 27);
+    /// # });
+    /// ```
+    pub fn run_with<U, R>(
+        value: T,
+        f: impl FnOnce(VisitingRef<T>) -> R,
+    ) -> impl Future<Output = (T, U)>
+    where
+        R: Future<Output = U>,
+    {
+        let (value_ref, value_return) = Self::new(value);
+
+        futures_util::future::join(value_return, f(value_ref))
+    }
 }
 
 impl<T> From<VisitingMut<T>> for VisitingRef<T> {
@@ -525,6 +557,45 @@ impl<T> VisitingMut<T> {
     #[inline]
     pub fn downgrade(value: Self) -> VisitingRef<T> {
         VisitingRef { inner: value.inner }
+    }
+
+    /// Wraps a given `T` value in a `VisitingMut` and runs an asynchronous closure with the
+    /// `VisitingMut<T>` as its argument.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use visiting_ref::VisitingMut;
+    ///
+    /// # futures::executor::block_on(async move {
+    /// struct Foo {
+    ///     value: i32,
+    /// }
+    ///
+    /// let foo = Foo { value: 27 };
+    ///
+    /// let (foo, result) = VisitingMut::run_with(foo, |mut foo| {
+    ///     async move {
+    ///         foo.value *= 3;
+    ///         foo.value
+    ///     }
+    /// })
+    /// .await;
+    ///
+    /// assert_eq!(result, 81);
+    /// assert_eq!(foo.value, 81);
+    /// # });
+    /// ```
+    pub fn run_with<U, R>(
+        value: T,
+        f: impl FnOnce(VisitingMut<T>) -> R,
+    ) -> impl Future<Output = (T, U)>
+    where
+        R: Future<Output = U>,
+    {
+        let (value_ref, value_return) = Self::new(value);
+
+        futures_util::future::join(value_return, f(value_ref))
     }
 }
 

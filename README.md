@@ -25,7 +25,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-visiting_ref = "0.1"
+visiting_ref = "0.2"
 ```
 
 Now you can use `VisitingRef` and `VisitingMut` types in your code:

@@ -1,6 +1,6 @@
 [package]
 name = "visiting_ref"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Theodore Cipicchio <okready@users.noreply.github.com>"]
 edition = "2018"
 description = "Container types that asynchronously return ownership of a value to another context upon exiting scope"

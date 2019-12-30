@@ -320,7 +320,8 @@
 //! Fortunately, [`VisitingRef`] doesn't have lifetime restrictions, so we can work around these
 //! limitations by replacing the `&Context` type with a `VisitingRef<Context>`, allowing access to
 //! the context while still ensuring it is moved back to `run_with` when the closure is done with
-//! it.
+//! it. [`VisitingRef::run_with`] and [`VisitingMut::run_with`] can be used to easily support this
+//! pattern.
 //!
 //! ```
 //! use futures::prelude::*;
@@ -337,8 +338,7 @@
 //!         F: Future<Output = R>,
 //!     {
 //!         let context = Context {};
-//!         let (context_ref, context_return) = VisitingRef::new(context);
-//!         let (result, context) = future::join(f(context_ref), context_return).await;
+//!         let (context, result) = VisitingRef::run_with(context, f).await;
 //!         // Do something with `context`...
 //!
 //!         result
@@ -383,6 +383,8 @@
 //! [`DerefMut`]: https://doc.rust-lang.org/std/ops/trait.DerefMut.html
 //! [`rental`]: https://crates.io/crates/rental
 //! [`rental!`]: https://docs.rs/rental/0.5/rental/macro.rental.html
+//! [`VisitingRef::run_with`]: struct.VisitingRef.html#method.run_with
+//! [`VisitingMut::run_with`]: struct.VisitingMut.html#method.run_with
 
 #![no_std]
 // LINT: Ignore `needless_doctest_main` for doc tests that use `#[tokio::main]` (if there's a way to
